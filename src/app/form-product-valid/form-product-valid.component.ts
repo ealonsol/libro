@@ -1,17 +1,18 @@
 import { ApplicationRef, Component, OnInit } from '@angular/core';
+import { NgForm } from '@angular/forms';
 import { Model } from '../repository.model';
 import { Product } from '../product.model';
 
+
 @Component({
-  selector: 'app-product-form',
-  templateUrl: './product-form.component.html',
-  styleUrls: ['./product-form.component.css']
+  selector: 'app-form-product-valid',
+  templateUrl: './form-product-valid.component.html',
+  styleUrls: ['./form-product-valid.component.css']
 })
-export class ProductFormComponent implements OnInit {
+export class FormProductValidComponent implements OnInit {
 
   model: Model = new Model();
   selectedProduct: String;
-
   newProduct: Product = new Product();
 
   constructor() { }
@@ -20,7 +21,7 @@ export class ProductFormComponent implements OnInit {
   }
 
   getProduct(key: number): Product {
-      return this.model.getProduct(key);
+    return this.model.getProduct(key);
   }
   getProducts(): Product[] {
       return this.model.getProducts();
@@ -54,11 +55,31 @@ export class ProductFormComponent implements OnInit {
               break;
           case 'pattern':
               messages.push(`The ${thing} contains
-                   ilegal characters`);
+                  ilegal characters`);
               break;
         }
       }
     }
     return messages;
   }
+  formSubmitted: boolean = false;
+    submitForm(form: NgForm) {
+        this.formSubmitted = true;
+        if (form.valid) {
+            this.addProduct(this.newProduct);
+            this.newProduct = new Product();
+            form.reset();
+            this.formSubmitted = false;
+        }
+    }
+
+  getFormValidationMessages(form: NgForm): string[] {
+      let messages: string[] = [];
+      Object.keys(form.controls).forEach(k => {
+          this.getValidationMessages(form.controls[k], k)
+              .forEach(m => messages.push(m));
+      });
+      return messages;
+  }
+
 }

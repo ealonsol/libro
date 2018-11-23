@@ -74,7 +74,8 @@
 
 <div class="form-group m-2">
   <label>Name:</label>
-  <input class="form-control" [value]="model.getProduct(1)?.name || 'None'" />
+  <!--<input class="form-control" [value]="model.getProduct(1)?.name || 'None'" />-->
+  <input class="form-control" (input)="selectedProduct=$event.target.value" />
 </div>
 
 <table class="table table-sm table-bordered table-striped mt-2">
