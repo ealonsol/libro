@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { Model } from '../repository.model';
 import { Product } from '../product.model';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ProductFormGroup } from '../form.model';
 
 @Component({
   selector: 'app-form-product-modelos',
@@ -11,58 +12,37 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 })
 export class FormProductModelosComponent implements OnInit {
 
-  model: Model = new Model();
-  selectedProduct: String;
-  newProduct: Product = new Product();
+    model: Model = new Model();
+    form: ProductFormGroup = new ProductFormGroup();
+    selectedProduct: String;
+    newProduct: Product = new Product();
+    formSubmitted: Boolean = false;
 
-  constructor() { }
+    constructor() { }
 
-  ngOnInit() {
-  }
+    ngOnInit() {
+    }
 
-  getProduct(key: number): Product {
-    return this.model.getProduct(key);
-  }
-  getProducts(): Product[] {
-      return this.model.getProducts();
-  }
+    getProduct(key: number): Product {
+        return this.model.getProduct(key);
+    }
 
-  getSelected(product: Product): boolean {
-    return product.name === this.selectedProduct;
-  }
+    getProducts(): Product[] {
+        return this.model.getProducts();
+    }
 
-  get jsonProduct() {
+    getSelected(product: Product): boolean {
+        return product.name === this.selectedProduct;
+    }
+
+    get jsonProduct() {
         return JSON.stringify(this.newProduct);
     }
 
-  addProduct(p: Product) {
+    addProduct(p: Product) {
         console.log('New Product: ' + this.jsonProduct);
-  }
-
-  getValidationMessages(state: any, thingName?: string) {
-    const thing: string = state.path || thingName;
-    const messages: string[] = [];
-    if (state.errors) {
-      for (const errorName in state.errors) {
-        switch (errorName) {
-          case 'required':
-              messages.push(`You mas enter a ${thing}`);
-              break;
-          case 'minlength':
-              messages.push(`A ${thing} mas be at least
-                  ${state.errors['minlength'].requiredLength}
-                  characters`);
-              break;
-          case 'pattern':
-              messages.push(`The ${thing} contains
-                  ilegal characters`);
-              break;
-        }
-      }
     }
-    return messages;
-  }
-  formSubmitted: boolean = false;
+
     submitForm(form: NgForm) {
         this.formSubmitted = true;
         if (form.valid) {
@@ -72,14 +52,4 @@ export class FormProductModelosComponent implements OnInit {
             this.formSubmitted = false;
         }
     }
-
-  getFormValidationMessages(form: NgForm): string[] {
-      let messages: string[] = [];
-      Object.keys(form.controls).forEach(k => {
-          this.getValidationMessages(form.controls[k], k)
-              .forEach(m => messages.push(m));
-      });
-      return messages;
-  }
-
 }
